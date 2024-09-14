@@ -95,20 +95,30 @@
                   @error('city')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-floating my-3">
                   <input type="text" class="form-control" name="address" required="" value="{{ old('address') }}">
                   <label for="address">House no, Building Name *</label>
                   @error('address')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-floating my-3">
                   <input type="text" class="form-control" name="locality" required="" value="{{ old('locality') }}">
                   <label for="locality">Road Name, Area, Colony *</label>
                   @error('locality')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
               </div>
+              <div class="col-md-4">
+                <div class="form-floating my-3">
+                  <input type="text" class="form-control" name="country" required="" value="{{ old('country') }}">
+                  <label for="country">Country *</label>
+                  @error('country')<span class="text-danger">{{ $message }}</span>@enderror
+                </div>
+              </div>
+            
+            
+            
               <div class="col-md-12">
                 <div class="form-floating my-3">
                   <input type="text" class="form-control" name="landmark" required="" value="{{ old('landmark') }}">
