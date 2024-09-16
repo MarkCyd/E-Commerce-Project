@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('landmark')->nullable();
             $table->string('zip');
-            $table->string('type')->defualt('home');
+            $table->string('type')->default('home');
             $table->enum('status',['ordered','delivered','cancelled'])->default('ordered');
             $table->boolean('is_shipping_different')->default(false);
             $table->date('delivered_date')->nullable();

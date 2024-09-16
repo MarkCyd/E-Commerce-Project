@@ -41,8 +41,9 @@ use Illuminate\Support\Facades\Route;
 
     //Checkout
     Route::get('/checkout',[CartController::class, 'checkout'])->name('cart.checkout');
-
-
+    Route::post('/place-an-order', [CartController::class, 'place_an_order'])->name('cart.place.an.order');
+    Route::get('/order-confirmation', [CartController::class, 'order_confirmation'])->name('cart.order.confirmation');
+   
     //user auth accounts
     Route::middleware('auth')->group(function () {
 
@@ -50,7 +51,8 @@ use Illuminate\Support\Facades\Route;
     });
     //admin auth accounts
     Route::middleware('auth', AuthAdmin::class)->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/account-orders',[UserController::class,'orders'])->name('user.orders');
     //brands
     Route::get('/admin/brands', [AdminController::class, 'brands'])->name('admin.brands');
     Route::get('/admin/brand/add', [AdminController::class, 'add_brand'])->name('admin.brand.add');
@@ -79,5 +81,9 @@ use Illuminate\Support\Facades\Route;
     Route::get('/admin/coupon/{id}/edit', [AdminController::class, 'coupon_edit'])->name('admin.coupon.edit');
     Route::put('/admin/coupon/update', [AdminController::class, 'coupon_update'])->name('admin.coupon.update');
     Route::delete('/admin/coupon/{id}/delete', [AdminController::class, 'coupon_delete'])->name('admin.coupon.delete');
-      
+    //orders
+    Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');  
+    route::get('/admin/order/{order_id}/details', [AdminController::class, 'order_details'])->name('admin.order.details');
+
+
 });
