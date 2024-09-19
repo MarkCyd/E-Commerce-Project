@@ -121,6 +121,9 @@
                         </div>
                     </div>
                     <div class="table-responsive">
+                        @if (session()->has('status') && $message = session('status'))
+                            <p class="alert alert-success">{{ $message }}</p>
+                        @endif
                         <table class="table table-bordered table-striped table-transaction">
                               <tr>
                                     <th>Order No</th>
@@ -270,7 +273,16 @@
                         </tbody>
                     </table>
                 </div>
-                
+                @if ($order->status == 'ordered')
+                <div class="wg-box mt-5 text-right"> 
+                    <form action="{{ route('user.order.cancel', $order->id) }}" method="post">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+                        <button type="button" class="btn btn-danger cancel-order ">Cancel Order</button>
+                    </form>
+                </div>
+                @endif
             </div>
 
         </div>
@@ -278,3 +290,25 @@
 </main>
 
 @endsection
+
+@push('scripts')
+<script>
+    $(function(){
+        $(".cancel-order").on('click',function(e){
+            e.preventDefault();
+            var selectedForm = $(this).closest('form');
+            swal({
+                title: "Are you sure?",
+                text: "You want to cancel this record?",
+                type: "warning",
+                buttons: ["No!", "Yes!"],
+                confirmButtonColor: '#dc3545'
+            }).then(function (result) {
+                if (result) {
+                    selectedForm.submit();  
+                }
+            });                             
+        });
+    });
+</script>
+@endpush

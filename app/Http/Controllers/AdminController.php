@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Slide;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -541,4 +542,107 @@ public function generateProductThumbnailImage($image, $imageName)
         }
         return back()->with('status', 'Order status has been updated successfully!');
     }
+
+    public function slides()
+    {
+        $slides = Slide::orderby('id','DESC')->paginate(10);
+        return view('admin.slides', compact('slides'));
+    }
+
+    public function slide_add()
+    {
+        return view('admin.slide-add');
+    }
+
+    public function slide_store(Request $request)
+    {
+        $request->validate([
+            'tagline' => 'required',
+            'title' => 'required',
+            'subtitle'  => 'required',
+            'link' => 'required',
+            'status'  => 'required',
+            'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+        ]);
+        $slide = new Slide();
+        $slide->tagline = $request->tagline;
+        $slide->title = $request->title;
+        $slide->subtitle = $request->subtitle;
+        $slide->link = $request->link;
+        $slide->status = $request->status;
+       
+        $image = $request->file('image');
+        $file_extention = $request->file('image')->extension();
+        $file_name = Carbon::now()->timestamp . '.' . $file_extention;        
+        $this->generateSlideThumbnailImage($image,$file_name);
+        $slide->image = $file_name;        
+        
+        $slide->save();
+        return redirect()->route('admin.slides')->with('status', 'Record has been added successfully!');
+
+    }
+    public function generateSlideThumbnailImage($image , $imageName)
+    {
+    $destinationPath = public_path('uploads/slides'); // upload path
+    $img = Image::read($image->path()); //read image
+    $img->cover(400, 690, 'top'); 
+    $img->resize(400, 690, function ($constraint) { //resize image
+        $constraint->aspectRatio(); //keep ratio
+    });
+    // Crop the image to the exact dimensions
+  
+    $img->save($destinationPath . '/' . $imageName); // save image to destination path 
+    }
+
+    public function slide_edit($id)
+    {
+        $slide = Slide::findOrFail($id);
+        return view('admin.slide-edit', compact('slide'));
+    }
+    public function slide_update(Request $request)
+    {
+        $request->validate([
+            'tagline' => 'required',
+            'title' => 'required',
+            'subtitle'  => 'required',
+            'link' => 'required',
+            'status'  => 'required',
+            'image' => 'mimes:png,jpg,jpeg|max:2048'
+        ]);
+        $slide = Slide::findOrFail($request->id);
+        $slide->tagline = $request->tagline;
+        $slide->title = $request->title;
+        $slide->subtitle = $request->subtitle;
+        $slide->link = $request->link;
+        $slide->status = $request->status;
+       
+        if($request->hasFile('image'))
+        {
+            if(File::exists(public_path('uploads/slides').'/'.$slide->image)) // check if image exists
+            {
+                File::delete(public_path('uploads/slides').'/'.$slide->image); //delete image
+            }
+            $image = $request->file('image');
+            $file_extention = $request->file('image')->extension();
+            $file_name = Carbon::now()->timestamp . '.' . $file_extention;        
+            $this->generateSlideThumbnailImage($image,$file_name);
+            $slide->image = $file_name;       
+        }
+        
+        
+        $slide->save();
+        return redirect()->route('admin.slides')->with('status', 'Record has been updated successfully!');
+
+    }
+
+    public function slide_delete($id)
+    {
+        $slide = Slide::findOrFail($id);
+        if (File::exists(public_path('uploads/slides').'/'.$slide->image)) {
+            File::delete(public_path('uploads/slides').'/'.$slide->image);
+        }
+        $slide->delete();
+        return back()->with('status', 'Record has been deleted successfully!');
+    }
+
 }
