@@ -6,13 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Slide;
-use App\Models\Transaction;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -714,6 +715,19 @@ public function generateProductThumbnailImage($image, $imageName)
             File::delete(public_path('uploads/slides').'/'.$slide->image);
         }
         $slide->delete();
+        return back()->with('status', 'Record has been deleted successfully!');
+    }
+
+    public function contacts()
+    {
+        $contacts = Contact::orderBy('created_at', 'DESC')->paginate(10);
+        return view('admin.contacts', compact('contacts'));
+    }
+
+    public function contact_delete($id)
+    {
+        $contact = Contact::findOrFail($id);
+        $contact->delete();
         return back()->with('status', 'Record has been deleted successfully!');
     }
 
