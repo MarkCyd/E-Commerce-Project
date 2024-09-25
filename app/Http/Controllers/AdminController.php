@@ -731,4 +731,11 @@ public function generateProductThumbnailImage($image, $imageName)
         return back()->with('status', 'Record has been deleted successfully!');
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $results = Product::where('name', 'like', "%{$query}%")->get()->take(8);
+        return response()->json($results);
+    }
+
 }

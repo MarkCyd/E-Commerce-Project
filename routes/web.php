@@ -109,4 +109,11 @@ use Illuminate\Support\Facades\Route;
         //contacts
         Route::get('/admin/contacts', [AdminController::class, 'contacts'])->name('admin.contacts');
         Route::delete('/admin/contact/{id}/delete', [AdminController::class, 'contact_delete'])->name('admin.contact.delete');
-}); 
+
+        //search
+        Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
+
+
+   }); 
+
+   

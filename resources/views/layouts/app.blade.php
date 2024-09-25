@@ -693,7 +693,8 @@
   <script src="{{ asset('assets/js/plugins/swiper.min.js')}}"></script>
   <script src="{{ asset('assets/js/plugins/countdown.js')}}"></script>
   <script src="{{ asset('assets/js/sweetalert.min.js')}}"></script>
-  <script>
+ 
+ <script>
     $(function(){
         $('#search-input').on('keyup', function(){
           var searchquery = $(this).val();
